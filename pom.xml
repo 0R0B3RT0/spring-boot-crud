@@ -129,8 +129,7 @@
 										</limit>
 									</limits>
 									<excludes>
-										<exclude>com.contaazul.inventory.infrastructure.configuration.Application</exclude>
-										<exclude>*infrastructure*</exclude>
+										<exclude>com.spring.springbootcrud.infrastructure</exclude>
 									</excludes>
 								</rule>
 							</rules>
