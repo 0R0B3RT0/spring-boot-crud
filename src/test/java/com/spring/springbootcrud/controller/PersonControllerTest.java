@@ -20,7 +20,6 @@ public class PersonControllerTest extends BaseUnitTest {
 
   public void setup() {
     super.setup();
-    ;
     when(personService.save(personDTO)).thenReturn(expectedPersonDTO);
   }
 
