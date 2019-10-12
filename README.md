@@ -23,3 +23,4 @@ mvn clean install
 - 0.0.1: Configuração da aplicação;
 - 0.0.2: Implementação do fluso salvar pessoa #13;
 - 0.0.3: Formatação do código com padrão google #17;
+- 0.0.4: Criação de endpoint para salvar pessoa #14;
