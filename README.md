@@ -22,3 +22,4 @@ mvn clean install
 ## Changelog
 - 0.0.1: Configuração da aplicação;
 - 0.0.2: Implementação do fluso salvar pessoa #13;
+- 0.0.3: Formatação do código com padrão google #17;
