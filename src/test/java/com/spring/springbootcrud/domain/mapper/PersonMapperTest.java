@@ -3,12 +3,11 @@ package com.spring.springbootcrud.domain.mapper;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
 
-import org.junit.Test;
-import org.mockito.InjectMocks;
-
 import com.spring.springbootcrud.BaseUnitTest;
 import com.spring.springbootcrud.domain.dto.PersonDTO;
 import com.spring.springbootcrud.domain.entity.Person;
+import org.junit.Test;
+import org.mockito.InjectMocks;
 
 public class PersonMapperTest extends BaseUnitTest {
 
