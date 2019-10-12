@@ -6,7 +6,10 @@ import static org.hamcrest.Matchers.equalTo;
 
 import com.spring.springbootcrud.domain.dto.PersonDTO;
 import com.spring.springbootcrud.domain.entity.Person;
+import java.lang.annotation.Annotation;
+import java.lang.reflect.Method;
 import java.time.LocalDate;
+import java.util.Arrays;
 import java.util.UUID;
 import org.junit.Before;
 import org.junit.runner.RunWith;
@@ -61,5 +64,16 @@ public abstract class BaseUnitTest {
         .bornDate(bornDate)
         .address(ADDRESS)
         .build();
+  }
+
+  protected <T extends Annotation> T getAnnotation(Method method, Class<T> clazz) {
+    return method.getAnnotation(clazz);
+  }
+
+  protected Method getMethod(Class clazz, String methodName) {
+    return Arrays.stream(clazz.getMethods())
+        .filter(m -> m.getName().equals(methodName))
+        .findFirst()
+        .orElseThrow(RuntimeException::new);
   }
 }
