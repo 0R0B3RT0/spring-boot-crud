@@ -3,10 +3,9 @@ package com.spring.springbootcrud.service;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
 
+import com.spring.springbootcrud.BaseUnitTest;
 import org.junit.Test;
 import org.mockito.InjectMocks;
-
-import com.spring.springbootcrud.BaseUnitTest;
 
 public class DocumentServiceTest extends BaseUnitTest {
 
