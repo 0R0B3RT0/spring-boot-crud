@@ -1,4 +1,4 @@
-package com.spring.springbootcrud.service.validation;
+package com.spring.springbootcrud.service;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -7,16 +7,20 @@ import java.util.Set;
 import javax.validation.ConstraintViolation;
 import javax.validation.Validator;
 
+import org.springframework.stereotype.Service;
+
 import com.spring.springbootcrud.domain.exception.ValidationException;
 
-public class Validation<T> {
-  private final T entity;
+@Service
+public class ValidationService<T> {
 
-  public Validation(T entity) {
-    this.entity = entity;
+  public T validateAndThrow(T entity) {
+    final Map<String, String> errors = getErrors(entity);
+    if (errors.isEmpty()) return entity;
+    throw new ValidationException(errors);
   }
 
-  public Map<String, String> getErrors() {
+  private Map<String, String> getErrors(T entity) {
     Validator validator = javax.validation.Validation.buildDefaultValidatorFactory().getValidator();
     Set<ConstraintViolation<T>> violations = validator.validate(entity);
     Map<String, String> errors = new HashMap<>();
@@ -26,13 +30,5 @@ public class Validation<T> {
 
   private void addToErrors(Map<String, String> errors, ConstraintViolation<T> violation) {
     errors.put(violation.getPropertyPath().toString(), violation.getMessage());
-  }
-
-  public boolean isValid() {
-    return getErrors().isEmpty();
-  }
-
-  public void validateAndThrow() {
-    if (!isValid()) throw new ValidationException(getErrors());
   }
 }

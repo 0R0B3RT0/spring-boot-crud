@@ -26,15 +26,17 @@ public class PersonServiceTest extends BaseUnitTest {
   @Mock private PersonMapper personMapper;
   @Mock private DocumentService documentService;
   @Mock private PersonRepository personRepository;
+  @Mock private ValidationService<Person> validationService;
   @Rule public ExpectedException expectedException = ExpectedException.none();
 
   @Override
   public void setup() {
     super.setup();
-    when(personMapper.toEntity(any(PersonDTO.class))).thenCallRealMethod();
-    when(personMapper.toDTO(any(Person.class))).thenCallRealMethod();
+    when(personMapper.toEntity(personDTO)).thenReturn(person);
+    when(personMapper.toDTO(person)).thenReturn(expectedPersonDTO);
     when(documentService.cleanDocument(any(String.class))).thenCallRealMethod();
     when(personRepository.save(person)).thenReturn(person);
+    when(validationService.validateAndThrow(person)).thenReturn(person);
   }
 
   @Test
@@ -63,7 +65,7 @@ public class PersonServiceTest extends BaseUnitTest {
   }
 
   private void verifyAllDependenciesOfPersonSave() {
-    verify(documentService, only()).cleanDocument(INVALID_CPF);
+    verify(documentService, only()).cleanDocument(VALID_CPF);
     verify(personRepository, only()).save(person);
     verify(personMapper).toEntity(personDTO);
     verify(personMapper).toDTO(person);
