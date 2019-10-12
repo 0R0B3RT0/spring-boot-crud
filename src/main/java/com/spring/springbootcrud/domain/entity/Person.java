@@ -13,9 +13,9 @@ import lombok.experimental.SuperBuilder;
 @Entity
 @Data
 @AllArgsConstructor
-@NoArgsConstructor
 @SuperBuilder
-@EqualsAndHashCode(callSuper = true)
+@NoArgsConstructor
+@EqualsAndHashCode(callSuper = false)
 public class Person extends Model {
 
   @NotNull(message = "must not be null")
@@ -26,7 +26,8 @@ public class Person extends Model {
   @Column(nullable = false)
   private String cpf;
 
-  @Column private LocalDate bornDate;
+  @Column(name = "born_date")
+  private LocalDate bornDate;
 
   @Column private String address;
 }
