@@ -1,4 +1,4 @@
-package com.spring.springbootcrud;
+package com.spring.springbootcrud.infrastructure;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
