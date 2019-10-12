@@ -2,16 +2,21 @@ package com.spring.springbootcrud.service;
 
 import static java.util.Optional.ofNullable;
 
+import java.util.function.Function;
+import java.util.function.UnaryOperator;
+
+import javax.persistence.PersistenceException;
+
+import lombok.extern.slf4j.Slf4j;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
 import com.spring.springbootcrud.domain.dto.PersonDTO;
 import com.spring.springbootcrud.domain.entity.Person;
 import com.spring.springbootcrud.domain.mapper.PersonMapper;
 import com.spring.springbootcrud.domain.repository.PersonRepository;
-import java.util.function.Function;
-import java.util.function.UnaryOperator;
-import javax.persistence.PersistenceException;
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
+import com.spring.springbootcrud.service.validation.Validation;
 
 @Slf4j
 @Service
@@ -23,10 +28,18 @@ public class PersonService {
 
   public PersonDTO save(PersonDTO personDTO) {
     return ofNullable(personDTO)
-        .map(personToEntity().andThen(cleanCpf()))
+        .map(personToEntity().andThen(validate()).andThen(cleanCpf()))
         .map(persist().andThen(logPersistSuccess()))
         .map(personMapper::toDTO)
         .orElseThrow(() -> new RuntimeException("Falha salvar a Pessoa"));
+  }
+
+  private UnaryOperator<Person> validate() {
+    return person -> {
+      final Validation<Person> validation = new Validation<>(person);
+      validation.validateAndThrow();
+      return person;
+    };
   }
 
   private Function<PersonDTO, Person> personToEntity() {
