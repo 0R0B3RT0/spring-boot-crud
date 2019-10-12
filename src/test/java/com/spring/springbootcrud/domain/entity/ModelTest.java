@@ -1,4 +1,4 @@
-package domain.entity;
+package com.spring.springbootcrud.domain.entity;
 
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.is;
@@ -10,8 +10,6 @@ import java.time.LocalDateTime;
 
 import org.junit.Before;
 import org.junit.Test;
-
-import com.spring.springbootcrud.domain.entity.Model;
 
 public class ModelTest {
 
