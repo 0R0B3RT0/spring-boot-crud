@@ -4,7 +4,6 @@ CREATE TABLE person
   name            TEXT             NOT NULL,
   cpf             TEXT             NOT NULL,
   born_date       DATE             NOT NULL,
-  unit_measure_id UUID,
   address         TEXT             NOT NULL,
   created_at      TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT now(),
   updated_at      TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT now(),
