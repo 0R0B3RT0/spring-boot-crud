@@ -10,6 +10,10 @@ createdb -U postgres spring-boot-crud
 ```bash
 mvn clean install
 ```
+### Executar a aplicação
+```bash
+mvn spring-boot:run
+```
 
 ## Stack
 * Java 11
