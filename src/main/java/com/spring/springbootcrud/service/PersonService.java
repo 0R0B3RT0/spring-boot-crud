@@ -20,10 +20,11 @@ public class PersonService {
   @Autowired private DocumentService documentService;
   @Autowired private PersonMapper personMapper;
   @Autowired private PersonRepository personRepository;
+  @Autowired private ValidationService<Person> validationService;
 
   public PersonDTO save(PersonDTO personDTO) {
     return ofNullable(personDTO)
-        .map(personToEntity().andThen(cleanCpf()))
+        .map(personToEntity().andThen(validationService::validateAndThrow).andThen(cleanCpf()))
         .map(persist().andThen(logPersistSuccess()))
         .map(personMapper::toDTO)
         .orElseThrow(() -> new RuntimeException("Falha salvar a Pessoa"));
@@ -53,9 +54,9 @@ public class PersonService {
   }
 
   private UnaryOperator<Person> cleanCpf() {
-    return dto -> {
-      dto.setCpf(documentService.cleanDocument(dto.getCpf()));
-      return dto;
+    return entity -> {
+      entity.setCpf(documentService.cleanDocument(entity.getCpf()));
+      return entity;
     };
   }
 }

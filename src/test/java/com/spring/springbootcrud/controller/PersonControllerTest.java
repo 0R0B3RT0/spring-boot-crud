@@ -31,7 +31,7 @@ public class PersonControllerTest extends BaseUnitTest {
     final ResponseEntity<PersonDTO> actualPersonDTO = personController.saveNew(personDTO);
 
     assertThat(actualPersonDTO.getStatusCode(), equalTo(OK));
-    assertAllAttributesOfPerson(actualPersonDTO.getBody());
+    assertAllAttributesOfPersonDTO(actualPersonDTO.getBody());
   }
 
   @Test
