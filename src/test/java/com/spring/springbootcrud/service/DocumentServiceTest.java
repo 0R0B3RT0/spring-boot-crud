@@ -3,16 +3,11 @@ package com.spring.springbootcrud.service;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
 
+import com.spring.springbootcrud.BaseUnitTest;
 import org.junit.Test;
-import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
-import org.mockito.junit.MockitoJUnitRunner;
 
-@RunWith(MockitoJUnitRunner.class)
-public class DocumentServiceTest {
-
-  private static final String INVALID_CPF = "123.456.789-10";
-  private static final String VALID_CPF = "12345678910";
+public class DocumentServiceTest extends BaseUnitTest {
 
   @InjectMocks private DocumentService documentService;
 

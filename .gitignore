@@ -47,3 +47,4 @@ target/
 .vscode/
 
 **/*.versionsBackup
+.attach_pid*
