@@ -11,13 +11,19 @@ import javax.persistence.Id;
 import javax.persistence.PrePersist;
 import javax.persistence.PreUpdate;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 
 import org.springframework.data.domain.Persistable;
 
 @Data
+@AllArgsConstructor
+@NoArgsConstructor
 @SuperBuilder
+@EqualsAndHashCode(of = "id")
 public class Model implements Persistable<UUID> {
 
 	@Id
