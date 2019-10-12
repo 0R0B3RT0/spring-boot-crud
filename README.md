@@ -20,4 +20,5 @@ mvn clean install
 * JUnit;
 
 ## Changelog
-- 0.0.1: Configuração da aplicação
+- 0.0.1: Configuração da aplicação;
+- 0.0.2: Implementação do fluso salvar pessoa #13;
