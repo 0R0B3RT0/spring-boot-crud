@@ -5,6 +5,8 @@ import static java.util.Optional.ofNullable;
 import java.util.function.Function;
 import java.util.function.UnaryOperator;
 
+import javax.persistence.PersistenceException;
+
 import lombok.extern.slf4j.Slf4j;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,7 +42,14 @@ public class PersonService {
 	}
 
 	private UnaryOperator<Person> persist() {
-		return personRepository::save;
+		return person -> {
+			try {
+				return personRepository.save( person );
+			} catch (Exception ex) {
+				log.error( "Falha ao persistir a pessoa, id:{}, name:{}", person.getId(), person.getName(), ex );
+				throw new PersistenceException( "Falha ao persistir a pessoa", ex );
+			}
+		};
 	}
 
 	private UnaryOperator<Person> logPersistSuccess() {

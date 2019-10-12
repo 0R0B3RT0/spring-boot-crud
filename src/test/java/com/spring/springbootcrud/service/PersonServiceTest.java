@@ -4,13 +4,19 @@ import static java.util.UUID.fromString;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.only;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import java.time.LocalDate;
 import java.util.UUID;
 
+import javax.persistence.PersistenceException;
+
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
@@ -42,6 +48,8 @@ public class PersonServiceTest {
 	private DocumentService documentService;
 	@Mock
 	private PersonRepository personRepository;
+	@Rule
+	public ExpectedException expectedException = ExpectedException.none();
 
 	@Before
 	public void setup() {
@@ -59,12 +67,41 @@ public class PersonServiceTest {
 	public void mustSaveNewPersonWhenHasPersonDTOIsValid() {
 		final PersonDTO actualPersonDTO = personService.save( personDTO );
 
+		assertAllAttributesOfPerson( actualPersonDTO );
+		verifyAllDependenciesOfPersonSave();
+	}
+
+	@Test
+	public void mustRuntimeExceptionWhenPersonDTOIsNull(){
+		expectedException.expect( RuntimeException.class );
+		expectedException.expectMessage( "Falha salvar a Pessoa" );
+
+		personService.save( null );
+	}
+
+	@Test
+	public void mustRuntimeExceptionWhenFailToSave(){
+		when( personRepository.save( person ) ).thenThrow( RuntimeException.class );
+		expectedException.expect( PersistenceException.class );
+		expectedException.expectMessage( "Falha ao persistir a pessoa" );
+
+		personService.save( personDTO );
+	}
+
+	private void assertAllAttributesOfPerson(PersonDTO actualPersonDTO) {
 		assertThat( actualPersonDTO.getId(), equalTo( expectedPersonDTO.getId() ) );
 		assertThat( actualPersonDTO.getName(), equalTo( expectedPersonDTO.getName() ) );
 		assertThat( actualPersonDTO.getCpf(), equalTo( expectedPersonDTO.getCpf() ) );
 		assertThat( actualPersonDTO.getBornDate(), equalTo( expectedPersonDTO.getBornDate() ) );
 		assertThat( actualPersonDTO.getAddress(), equalTo( expectedPersonDTO.getAddress() ) );
 		assertThat( actualPersonDTO, equalTo( expectedPersonDTO ) );
+	}
+
+	private void verifyAllDependenciesOfPersonSave() {
+		verify( documentService, only() ).cleanDocument(  INVALID_CPF );
+		verify( personRepository, only() ).save( person );
+		verify( personMapper ).toEntity( personDTO );
+		verify( personMapper ).toDTO( person );
 	}
 
 	private PersonDTO buildPersonDTO(String invalidCpf) {
