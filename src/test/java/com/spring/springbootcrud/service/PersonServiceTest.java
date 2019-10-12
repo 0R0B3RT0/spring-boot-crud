@@ -43,7 +43,7 @@ public class PersonServiceTest extends BaseUnitTest {
   public void mustSaveNewPersonWhenHasPersonDTOIsValid() {
     final PersonDTO actualPersonDTO = personService.save(personDTO);
 
-    assertAllAttributesOfPerson(actualPersonDTO);
+    assertAllAttributesOfPersonDTO(actualPersonDTO);
     verifyAllDependenciesOfPersonSave();
   }
 

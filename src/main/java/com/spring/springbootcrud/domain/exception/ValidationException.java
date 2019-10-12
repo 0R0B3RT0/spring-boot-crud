@@ -1,6 +1,5 @@
 package com.spring.springbootcrud.domain.exception;
 
-import java.util.Collections;
 import java.util.Map;
 import lombok.Getter;
 
@@ -11,9 +10,5 @@ public class ValidationException extends RuntimeException {
   public ValidationException(Map<String, String> errors) {
     super(errors.toString());
     this.errors = errors;
-  }
-
-  public ValidationException(String key, String value) {
-    this(Collections.singletonMap(key, value));
   }
 }

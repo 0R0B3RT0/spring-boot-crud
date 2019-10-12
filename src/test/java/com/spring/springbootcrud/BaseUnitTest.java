@@ -37,13 +37,22 @@ public abstract class BaseUnitTest {
     person = buildPerson();
   }
 
-  protected void assertAllAttributesOfPerson(PersonDTO actualPersonDTO) {
+  protected void assertAllAttributesOfPersonDTO(PersonDTO actualPersonDTO) {
     assertThat(actualPersonDTO.getId(), equalTo(expectedPersonDTO.getId()));
     assertThat(actualPersonDTO.getName(), equalTo(expectedPersonDTO.getName()));
     assertThat(actualPersonDTO.getCpf(), equalTo(expectedPersonDTO.getCpf()));
     assertThat(actualPersonDTO.getBornDate(), equalTo(expectedPersonDTO.getBornDate()));
     assertThat(actualPersonDTO.getAddress(), equalTo(expectedPersonDTO.getAddress()));
     assertThat(actualPersonDTO, equalTo(expectedPersonDTO));
+  }
+
+  protected void assertAllAttributesOfPerson(Person actualPerson) {
+    assertThat(actualPerson.getId(), equalTo(person.getId()));
+    assertThat(actualPerson.getName(), equalTo(person.getName()));
+    assertThat(actualPerson.getCpf(), equalTo(person.getCpf()));
+    assertThat(actualPerson.getBornDate(), equalTo(person.getBornDate()));
+    assertThat(actualPerson.getAddress(), equalTo(person.getAddress()));
+    assertThat(actualPerson, equalTo(person));
   }
 
   protected PersonDTO buildPersonDTO(String invalidCpf) {
