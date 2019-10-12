@@ -16,7 +16,7 @@ public class ModelTest {
 
   @Before
   public void before() {
-    model = Model.builder().build();
+    model = new Model() {};
   }
 
   @Test

@@ -7,6 +7,7 @@ import java.time.LocalDateTime;
 import java.util.UUID;
 import javax.persistence.Column;
 import javax.persistence.Id;
+import javax.persistence.MappedSuperclass;
 import javax.persistence.PrePersist;
 import javax.persistence.PreUpdate;
 import lombok.AllArgsConstructor;
@@ -17,27 +18,28 @@ import lombok.experimental.SuperBuilder;
 import org.springframework.data.domain.Persistable;
 
 @Data
+@MappedSuperclass
 @AllArgsConstructor
 @NoArgsConstructor
 @SuperBuilder
 @EqualsAndHashCode(of = "id")
-public class Model implements Persistable<UUID> {
+public abstract class Model implements Persistable<UUID> {
 
   @Id
   @Column(columnDefinition = "uuid")
-  protected UUID id;
+  private UUID id;
 
   @Column(name = "created_at", nullable = false, updatable = false)
-  protected LocalDateTime createdAt;
+  private LocalDateTime createdAt;
 
   @Column(nullable = false)
-  protected Boolean enabled;
+  private Boolean enabled;
 
   @Column(name = "updated_at", nullable = false)
-  protected LocalDateTime updatedAt;
+  private LocalDateTime updatedAt;
 
   @Column(name = "deleted_at")
-  protected LocalDateTime deletedAt;
+  private LocalDateTime deletedAt;
 
   @PrePersist
   public void beforePersist() {
