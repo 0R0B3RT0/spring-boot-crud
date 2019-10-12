@@ -3,16 +3,13 @@ package com.spring.springbootcrud;
 import static java.util.UUID.fromString;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
-import static org.mockito.Mockito.when;
 
 import com.spring.springbootcrud.domain.dto.PersonDTO;
 import com.spring.springbootcrud.domain.entity.Person;
-import com.spring.springbootcrud.service.PersonService;
 import java.time.LocalDate;
 import java.util.UUID;
 import org.junit.Before;
 import org.junit.runner.RunWith;
-import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -29,15 +26,12 @@ public abstract class BaseUnitTest {
   protected PersonDTO expectedPersonDTO;
   protected Person person;
 
-  @Mock protected PersonService personService;
-
   @Before
   public void setup() {
     bornDate = LocalDate.of(1989, 11, 1);
     personDTO = buildPersonDTO(INVALID_CPF);
     expectedPersonDTO = buildPersonDTO(VALID_CPF);
     person = buildPerson();
-    when(personService.save(personDTO)).thenReturn(expectedPersonDTO);
   }
 
   protected void assertAllAttributesOfPerson(PersonDTO actualPersonDTO) {
