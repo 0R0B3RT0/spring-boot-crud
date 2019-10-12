@@ -29,3 +29,4 @@ mvn spring-boot:run
 - 0.0.3: Formatação do código com padrão google #17;
 - 0.0.4: Criação de endpoint para salvar pessoa #14;
 - 0.0.5: Configuração do hystrix #15;
+- 0.0.6: Estrutura de validação #20;
