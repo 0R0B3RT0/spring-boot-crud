@@ -7,48 +7,46 @@ import static org.hamcrest.Matchers.notNullValue;
 import static org.junit.Assert.assertThat;
 
 import java.time.LocalDateTime;
-
 import org.junit.Before;
 import org.junit.Test;
 
 public class ModelTest {
 
-	private Model model;
+  private Model model;
 
-	@Before
-	public void before() {
-		model = Model.builder().build();
-	}
+  @Before
+  public void before() {
+    model = Model.builder().build();
+  }
 
-	@Test
-	public void shouldUpdateCreatedAtUpdateAtEnabledAndIdFieldsWhenBeforePersistMethodAreCalled() {
-		assertThat( model.isNew(), is( true ) );
+  @Test
+  public void shouldUpdateCreatedAtUpdateAtEnabledAndIdFieldsWhenBeforePersistMethodAreCalled() {
+    assertThat(model.isNew(), is(true));
 
-		model.beforePersist();
+    model.beforePersist();
 
-		assertThat( model.getId(), notNullValue() );
-		assertThat( model.isNew(), is( false ) );
-		assertThat( model.getEnabled(), is( true ) );
-		assertThat( model.getCreatedAt(), notNullValue() );
-		assertThat( model.getUpdatedAt(), notNullValue() );
-		assertThat( model.getCreatedAt(), equalTo( model.getUpdatedAt() ) );
-	}
+    assertThat(model.getId(), notNullValue());
+    assertThat(model.isNew(), is(false));
+    assertThat(model.getEnabled(), is(true));
+    assertThat(model.getCreatedAt(), notNullValue());
+    assertThat(model.getUpdatedAt(), notNullValue());
+    assertThat(model.getCreatedAt(), equalTo(model.getUpdatedAt()));
+  }
 
-	@Test
-	public void shouldUpdateUpdatedAtFieldWhenBeforeUpdateMethodAreCalled() {
-		model.beforeUpdate();
+  @Test
+  public void shouldUpdateUpdatedAtFieldWhenBeforeUpdateMethodAreCalled() {
+    model.beforeUpdate();
 
-		assertThat( model.getUpdatedAt(), notNullValue() );
-		assertThat( model.getUpdatedAt(), not( equalTo( model.getCreatedAt() ) ) );
-	}
+    assertThat(model.getUpdatedAt(), notNullValue());
+    assertThat(model.getUpdatedAt(), not(equalTo(model.getCreatedAt())));
+  }
 
-	@Test
-	public void shouldSetCorrectValueToDeletedAtField() {
-		LocalDateTime deletedAt = LocalDateTime.now();
+  @Test
+  public void shouldSetCorrectValueToDeletedAtField() {
+    LocalDateTime deletedAt = LocalDateTime.now();
 
-		model.setDeletedAt( deletedAt );
+    model.setDeletedAt(deletedAt);
 
-		assertThat( model.getDeletedAt(), equalTo( deletedAt ) );
-	}
-
+    assertThat(model.getDeletedAt(), equalTo(deletedAt));
+  }
 }
