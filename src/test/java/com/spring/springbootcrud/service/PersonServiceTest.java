@@ -1,5 +1,6 @@
 package com.spring.springbootcrud.service;
 
+import static org.assertj.core.util.Lists.newArrayList;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.only;
 import static org.mockito.Mockito.verify;
@@ -10,6 +11,7 @@ import com.spring.springbootcrud.domain.dto.PersonDTO;
 import com.spring.springbootcrud.domain.entity.Person;
 import com.spring.springbootcrud.domain.mapper.PersonMapper;
 import com.spring.springbootcrud.domain.repository.PersonRepository;
+import java.util.List;
 import javax.persistence.PersistenceException;
 import org.junit.Rule;
 import org.junit.Test;
@@ -37,6 +39,7 @@ public class PersonServiceTest extends BaseUnitTest {
     when(documentService.cleanDocument(any(String.class))).thenCallRealMethod();
     when(personRepository.save(person)).thenReturn(person);
     when(validationService.validateAndThrow(person)).thenReturn(person);
+    when(personRepository.findAllByEnabledTrue()).thenReturn(newArrayList(person));
   }
 
   @Test
@@ -62,6 +65,15 @@ public class PersonServiceTest extends BaseUnitTest {
     expectedException.expectMessage("Falha ao persistir a pessoa");
 
     personService.save(personDTO);
+  }
+
+  @Test
+  public void mustFindAllPeopleWhenFindAllEnabledPeople() {
+    final List<PersonDTO> activePeopleDTO = personService.findEnabledPeople();
+
+    assertAllAttributesOfPersonDTO(activePeopleDTO.get(0));
+    verify(personRepository, only()).findAllByEnabledTrue();
+    verify(personMapper, only()).toDTO(person);
   }
 
   private void verifyAllDependenciesOfPersonSave() {

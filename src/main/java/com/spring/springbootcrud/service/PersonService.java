@@ -6,8 +6,10 @@ import com.spring.springbootcrud.domain.dto.PersonDTO;
 import com.spring.springbootcrud.domain.entity.Person;
 import com.spring.springbootcrud.domain.mapper.PersonMapper;
 import com.spring.springbootcrud.domain.repository.PersonRepository;
+import java.util.List;
 import java.util.function.Function;
 import java.util.function.UnaryOperator;
+import java.util.stream.Collectors;
 import javax.persistence.PersistenceException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,6 +30,12 @@ public class PersonService {
         .map(persist().andThen(logPersistSuccess()))
         .map(personMapper::toDTO)
         .orElseThrow(() -> new RuntimeException("Falha salvar a Pessoa"));
+  }
+
+  public List<PersonDTO> findEnabledPeople() {
+    return personRepository.findAllByEnabledTrue().stream()
+        .map(personMapper::toDTO)
+        .collect(Collectors.toList());
   }
 
   private Function<PersonDTO, Person> personToEntity() {
