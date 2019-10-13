@@ -19,6 +19,7 @@
 		<spring-cloud.version>Greenwich.SR3</spring-cloud.version>
 		<jacoco.version>0.8.4</jacoco.version>
 		<spring-boot-crud.coverage>0.9</spring-boot-crud.coverage>
+		<cucumber.version>4.7.4</cucumber.version>
 	</properties>
 
 	<dependencies>
@@ -69,6 +70,17 @@
 		<dependency>
 			<groupId>com.h2database</groupId>
 			<artifactId>h2</artifactId>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>io.cucumber</groupId>
+			<artifactId>cucumber-java</artifactId>
+			<version>${cucumber.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>io.cucumber</groupId>
+			<artifactId>cucumber-junit</artifactId>
+			<version>${cucumber.version}</version>
 			<scope>test</scope>
 		</dependency>
 	</dependencies>
