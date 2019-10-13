@@ -23,6 +23,13 @@ mvn spring-boot:run
 * Postgres;
 * JUnit;
 
+## Dependências
+* [docker-compose](https://docs.docker.com/compose/install/#install-compose);
+```bash
+sudo apt-get install docker-compose
+sudo docker-compose down -v
+```
+
 ## Changelog
 - 0.0.1: Configuração da aplicação;
 - 0.0.2: Implementação do fluso salvar pessoa #13;
