@@ -1,5 +1,6 @@
 package com.spring.springbootcrud.service;
 
+import static com.spring.springbootcrud.domain.repository.PersonRepository.getSpecification;
 import static java.util.Optional.ofNullable;
 
 import com.spring.springbootcrud.domain.dto.PersonDTO;
@@ -32,8 +33,9 @@ public class PersonService {
         .orElseThrow(() -> new RuntimeException("Falha salvar a Pessoa"));
   }
 
-  public List<PersonDTO> findEnabledPeople() {
-    return personRepository.findAllByEnabledTrue().stream()
+  public List<PersonDTO> findByFilter(PersonDTO filter) {
+    return ofNullable(getSpecification(filter)).map(s -> personRepository.findAll(s))
+        .orElseGet(personRepository::findAllByEnabledTrue).stream()
         .map(personMapper::toDTO)
         .collect(Collectors.toList());
   }

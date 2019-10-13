@@ -2,6 +2,7 @@ package com.spring.springbootcrud.service;
 
 import static org.assertj.core.util.Lists.newArrayList;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.only;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -40,6 +41,7 @@ public class PersonServiceTest extends BaseUnitTest {
     when(personRepository.save(person)).thenReturn(person);
     when(validationService.validateAndThrow(person)).thenReturn(person);
     when(personRepository.findAllByEnabledTrue()).thenReturn(newArrayList(person));
+    when(personRepository.findAll(any())).thenReturn(newArrayList(person));
   }
 
   @Test
@@ -68,11 +70,22 @@ public class PersonServiceTest extends BaseUnitTest {
   }
 
   @Test
-  public void mustFindAllPeopleWhenFindAllEnabledPeople() {
-    final List<PersonDTO> activePeopleDTO = personService.findEnabledPeople();
+  public void mustFindAllPeopleWhenFindWithFilter() {
+    final List<PersonDTO> activePeopleDTO = personService.findByFilter(expectedPersonDTO);
 
     assertAllAttributesOfPersonDTO(activePeopleDTO.get(0));
-    verify(personRepository, only()).findAllByEnabledTrue();
+    verify(personRepository).findAll(any());
+    verify(personRepository, never()).findAllByEnabledTrue();
+    verify(personMapper, only()).toDTO(person);
+  }
+
+  @Test
+  public void mustFindAllPeopleWhenFindWithoutFilter() {
+    final List<PersonDTO> activePeopleDTO = personService.findByFilter(PersonDTO.builder().build());
+
+    assertAllAttributesOfPersonDTO(activePeopleDTO.get(0));
+    verify(personRepository, never()).findAll(any());
+    verify(personRepository).findAllByEnabledTrue();
     verify(personMapper, only()).toDTO(person);
   }
 
