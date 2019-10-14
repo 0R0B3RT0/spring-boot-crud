@@ -3,6 +3,7 @@ package com.spring.springbootcrud.service;
 import static java.util.Optional.of;
 import static org.assertj.core.util.Lists.newArrayList;
 import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.notNullValue;
 import static org.junit.Assert.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.never;
@@ -10,21 +11,26 @@ import static org.mockito.Mockito.only;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import java.util.List;
+import java.util.Optional;
+
+import javax.persistence.PersistenceException;
+
+import org.junit.Rule;
+import org.junit.Test;
+import org.junit.rules.ExpectedException;
+import org.junit.runner.RunWith;
+import org.mockito.ArgumentCaptor;
+import org.mockito.Captor;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.junit.MockitoJUnitRunner;
+
 import com.spring.springbootcrud.BaseUnitTest;
 import com.spring.springbootcrud.domain.dto.PersonDTO;
 import com.spring.springbootcrud.domain.entity.Person;
 import com.spring.springbootcrud.domain.mapper.PersonMapper;
 import com.spring.springbootcrud.domain.repository.PersonRepository;
-import java.util.List;
-import java.util.Optional;
-import javax.persistence.PersistenceException;
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.rules.ExpectedException;
-import org.junit.runner.RunWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.junit.MockitoJUnitRunner;
 
 @RunWith(MockitoJUnitRunner.class)
 public class PersonServiceTest extends BaseUnitTest {
@@ -35,6 +41,7 @@ public class PersonServiceTest extends BaseUnitTest {
   @Mock private PersonRepository personRepository;
   @Mock private ValidationService<Person> validationService;
   @Rule public ExpectedException expectedException = ExpectedException.none();
+  @Captor public ArgumentCaptor<Person> argumentCaptor = ArgumentCaptor.forClass(Person.class);
 
   @Override
   public void setup() {
@@ -120,6 +127,28 @@ public class PersonServiceTest extends BaseUnitTest {
 
     assertThat(optional.isPresent(), is(true));
     assertAllAttributesOfPersonDTO(optional.get());
+  }
+
+  @Test
+  public void mustCancelPersonWherHasValidId() {
+    when(personRepository.findByIdAndEnabledTrue(ID)).thenReturn(of(person));
+    when(personRepository.save(any(Person.class))).thenReturn(person);
+
+    final Optional<PersonDTO> actualPersonDTO = personService.cancelById(ID);
+
+    verify(personRepository).save(argumentCaptor.capture());
+    final Person captorValue = argumentCaptor.getValue();
+    assertThat(captorValue.getDeletedAt(), notNullValue());
+    assertThat(captorValue.getEnabled(), is(false));
+    assertThat(actualPersonDTO.isPresent(), is(true));
+    assertAllAttributesOfPersonDTO(actualPersonDTO.get());
+  }
+
+  @Test
+  public void mustNotCancelPersonWherHasValidId() {
+    final Optional<PersonDTO> actualPersonDTO = personService.cancelById(null);
+
+    assertThat(actualPersonDTO.isPresent(), is(false));
   }
 
   private void verifyAllDependenciesOfPersonSave() {

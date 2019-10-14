@@ -20,6 +20,8 @@ public interface PersonRepository
 
   List<Person> findAllByEnabledTrue();
 
+  Optional<Person> findByIdAndEnabledTrue(UUID id);
+
   static Specification<Person> hasCpf(String cpf) {
     return (book, cq, cb) -> cb.equal(book.get("cpf"), cpf);
   }
