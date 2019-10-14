@@ -36,3 +36,4 @@ mvn spring-boot:run
 - 0.0.5: Configuração do hystrix #15;
 - 0.0.6: Estrutura de validação #20;
 - 0.0.7: Configuração Docker #6;
+- 0.0.8: Funcionalidade atualizar pessoa #31;
