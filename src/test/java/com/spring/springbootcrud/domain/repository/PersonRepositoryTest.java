@@ -3,6 +3,7 @@ package com.spring.springbootcrud.domain.repository;
 import static com.spring.springbootcrud.domain.repository.PersonRepository.getSpecification;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.notNullValue;
 
 import com.spring.springbootcrud.BaseUnitTest;
 import com.spring.springbootcrud.domain.dto.PersonDTO;
@@ -33,5 +34,50 @@ public class PersonRepositoryTest extends BaseUnitTest {
         getSpecification(PersonDTO.builder().build());
 
     assertThat(specification.isPresent(), is(false));
+  }
+
+  @Test
+  public void mustGetSpecificationWhenTheFilterHasOnlyCpf() {
+    final Optional<Specification<Person>> specification =
+        getSpecification(PersonDTO.builder().cpf(VALID_CPF).build());
+
+    assertThat(specification.isPresent(), is(true));
+  }
+
+  @Test
+  public void mustGetSpecificationWhenTheFilterHasOnlyName() {
+    final Optional<Specification<Person>> specification =
+        getSpecification(PersonDTO.builder().name(NAME).build());
+
+    assertThat(specification.isPresent(), is(true));
+  }
+
+  @Test
+  public void mustGetSpecificationWhenTheFilterHasOnlyAddress() {
+    final Optional<Specification<Person>> specification =
+        getSpecification(PersonDTO.builder().address(ADDRESS).build());
+
+    assertThat(specification.isPresent(), is(true));
+  }
+
+  @Test
+  public void mustHasCpfWhenHasCpfString() {
+    final Specification<Person> hasCpf = PersonRepository.hasCpf(VALID_CPF);
+
+    assertThat(hasCpf, notNullValue());
+  }
+
+  @Test
+  public void mustNameContainsWhenHasNameString() {
+    final Specification<Person> nameContains = PersonRepository.nameContains(NAME);
+
+    assertThat(nameContains, notNullValue());
+  }
+
+  @Test
+  public void mustAddressContainsWhenHasAddressString() {
+    final Specification<Person> addressContains = PersonRepository.addressContains(ADDRESS);
+
+    assertThat(addressContains, notNullValue());
   }
 }
