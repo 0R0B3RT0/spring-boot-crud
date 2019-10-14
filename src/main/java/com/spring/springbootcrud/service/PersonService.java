@@ -34,7 +34,7 @@ public class PersonService {
   }
 
   public List<PersonDTO> findByFilter(PersonDTO filter) {
-    return ofNullable(getSpecification(filter)).map(s -> personRepository.findAll(s))
+    return getSpecification(filter).map(s -> personRepository.findAll(s))
         .orElseGet(personRepository::findAllByEnabledTrue).stream()
         .map(personMapper::toDTO)
         .collect(Collectors.toList());

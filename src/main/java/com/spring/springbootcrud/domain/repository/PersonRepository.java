@@ -1,10 +1,13 @@
 package com.spring.springbootcrud.domain.repository;
 
 import static com.google.common.collect.Lists.newArrayList;
+import static java.util.Optional.empty;
+import static java.util.Optional.ofNullable;
 
 import com.spring.springbootcrud.domain.dto.PersonDTO;
 import com.spring.springbootcrud.domain.entity.Person;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
@@ -29,8 +32,8 @@ public interface PersonRepository
     return (book, cq, cb) -> cb.equal(book.get("address"), "%" + address + "%");
   }
 
-  static Specification<Person> getSpecification(PersonDTO filter) {
-    if (filter == null) return null;
+  static Optional<Specification<Person>> getSpecification(PersonDTO filter) {
+    if (filter == null) return empty();
     Specification<Person> specification = null;
     List<Specification<Person>> specifications = newArrayList();
 
@@ -42,6 +45,6 @@ public interface PersonRepository
       if (specification == null) specification = personSpecification;
       else specification.and(personSpecification);
     }
-    return specification;
+    return ofNullable(specification);
   }
 }
