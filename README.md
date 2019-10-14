@@ -1,7 +1,12 @@
 # spring-boot-crud
 Projeto de CRUD com Spring Boot
 
-## Executar a aplicação
+# Features
+CRUD de Pessoa
+
+[Postman collections](https://github.com/robertocandido/spring-boot-crud/blob/master/spring-boot-crud.postman_collection.json)
+
+# Execução
 ### Iniciar o banco de dados
 ```bash
 sudo docker-compose up
@@ -23,7 +28,8 @@ mvn spring-boot:run
 * Postgres;
 * JUnit;
 
-## Dependências
+# Requisitos
+* [Java 11](https://www.oracle.com/technetwork/java/javase/downloads/jdk11-downloads-5066655.html);
 * [docker-compose](https://docs.docker.com/compose/install/#install-compose);
 * [Lombok](https://projectlombok.org/)
 
