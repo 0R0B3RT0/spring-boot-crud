@@ -55,11 +55,15 @@ public abstract class BaseUnitTest {
     assertThat(actualPerson, equalTo(person));
   }
 
-  protected PersonDTO buildPersonDTO(String invalidCpf) {
+  protected PersonDTO buildPersonDTO(String cpf) {
+    return buildPersonDTO(cpf, ID);
+  }
+
+  protected PersonDTO buildPersonDTO(String cpf, UUID id) {
     return PersonDTO.builder()
-        .id(ID)
+        .id(id)
         .name(NAME)
-        .cpf(invalidCpf)
+        .cpf(cpf)
         .bornDate(bornDate)
         .address(ADDRESS)
         .build();

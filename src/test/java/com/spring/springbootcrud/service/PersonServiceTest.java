@@ -2,6 +2,8 @@ package com.spring.springbootcrud.service;
 
 import static java.util.Optional.of;
 import static org.assertj.core.util.Lists.newArrayList;
+import static org.hamcrest.Matchers.is;
+import static org.junit.Assert.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.only;
@@ -14,6 +16,7 @@ import com.spring.springbootcrud.domain.entity.Person;
 import com.spring.springbootcrud.domain.mapper.PersonMapper;
 import com.spring.springbootcrud.domain.repository.PersonRepository;
 import java.util.List;
+import java.util.Optional;
 import javax.persistence.PersistenceException;
 import org.junit.Rule;
 import org.junit.Test;
@@ -36,6 +39,11 @@ public class PersonServiceTest extends BaseUnitTest {
   @Override
   public void setup() {
     super.setup();
+    personDTO = buildPersonDTO(INVALID_CPF, null);
+    mockAllServices();
+  }
+
+  private void mockAllServices() {
     when(personMapper.toEntity(personDTO)).thenReturn(person);
     when(personMapper.toDTO(person)).thenReturn(expectedPersonDTO);
     when(documentService.cleanDocument(any(String.class))).thenCallRealMethod();
@@ -54,11 +62,14 @@ public class PersonServiceTest extends BaseUnitTest {
   }
 
   @Test
-  public void mustUpdatePersonWhenHasPersonDTOIsValid() {
+  public void mustUpdatePersonWhenHasPersonDTOWithId() {
+    personDTO = buildPersonDTO(INVALID_CPF);
     when(personRepository.findById(ID)).thenReturn(of(person));
+    mockAllServices();
 
     final PersonDTO actualPersonDTO = personService.save(personDTO);
 
+    verify(personRepository).findById(ID);
     verify(personMapper).merge(personDTO, person);
     assertAllAttributesOfPersonDTO(actualPersonDTO);
     verifyAllDependenciesOfPersonSave();
@@ -101,10 +112,19 @@ public class PersonServiceTest extends BaseUnitTest {
     verify(personMapper, only()).toDTO(person);
   }
 
+  @Test
+  public void mustPersonWhenHasPersonInDatabase() {
+    when(personRepository.findById(ID)).thenReturn(of(person));
+
+    final Optional<PersonDTO> optional = personService.findById(ID);
+
+    assertThat(optional.isPresent(), is(true));
+    assertAllAttributesOfPersonDTO(optional.get());
+  }
+
   private void verifyAllDependenciesOfPersonSave() {
     verify(documentService, only()).cleanDocument(VALID_CPF);
     verify(personRepository).save(person);
-    verify(personRepository).findById(ID);
     verify(personMapper).toEntity(personDTO);
     verify(personMapper).toDTO(person);
   }

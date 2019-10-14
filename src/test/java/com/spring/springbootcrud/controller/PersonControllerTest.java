@@ -1,5 +1,7 @@
 package com.spring.springbootcrud.controller;
 
+import static java.util.Optional.empty;
+import static java.util.Optional.of;
 import static org.assertj.core.util.Lists.newArrayList;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
@@ -8,6 +10,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.only;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
+import static org.springframework.http.HttpStatus.NOT_FOUND;
 import static org.springframework.http.HttpStatus.OK;
 
 import com.netflix.hystrix.contrib.javanica.annotation.HystrixCommand;
@@ -73,5 +76,36 @@ public class PersonControllerTest extends BaseUnitTest {
 
     assertThat(annotation, notNullValue());
     assertThat(annotation.commandKey(), equalTo("find-by-filter"));
+  }
+
+  @Test
+  public void mustHttpStatusOKWhenFindById() {
+    when(personService.findById(ID)).thenReturn(of(expectedPersonDTO));
+
+    final ResponseEntity<PersonDTO> actualPersonDTO = personController.findById(ID);
+
+    verify(personService, only()).findById(ID);
+    assertThat(actualPersonDTO.getStatusCode(), equalTo(OK));
+    assertAllAttributesOfPersonDTO(actualPersonDTO.getBody());
+  }
+
+  @Test
+  public void mustHttpStatusNotFoundWhenDoesNotFindById() {
+    when(personService.findById(ID)).thenReturn(empty());
+
+    final ResponseEntity<PersonDTO> actualPersonDTO = personController.findById(ID);
+
+    verify(personService, only()).findById(ID);
+    assertThat(actualPersonDTO.getStatusCode(), equalTo(NOT_FOUND));
+  }
+
+  @Test
+  public void findByIdMustBeAnnotatedWithHystrixCommand() {
+    final Method method = getMethod(PersonController.class, "findById");
+
+    final HystrixCommand annotation = getAnnotation(method, HystrixCommand.class);
+
+    assertThat(annotation, notNullValue());
+    assertThat(annotation.commandKey(), equalTo("find-by-id"));
   }
 }

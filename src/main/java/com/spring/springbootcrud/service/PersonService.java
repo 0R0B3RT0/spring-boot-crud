@@ -8,6 +8,8 @@ import com.spring.springbootcrud.domain.entity.Person;
 import com.spring.springbootcrud.domain.mapper.PersonMapper;
 import com.spring.springbootcrud.domain.repository.PersonRepository;
 import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
 import java.util.function.Function;
 import java.util.function.UnaryOperator;
 import java.util.stream.Collectors;
@@ -33,6 +35,14 @@ public class PersonService {
         .orElseThrow(() -> new RuntimeException("Falha salvar a Pessoa"));
   }
 
+  public Optional<PersonDTO> findById(UUID id) {
+    return ofNullable(id).map(findById()).orElseGet(Optional::empty);
+  }
+
+  private Function<UUID, Optional<PersonDTO>> findById() {
+    return id -> personRepository.findById(id).map(personMapper::toDTO);
+  }
+
   public List<PersonDTO> findByFilter(PersonDTO filter) {
     return getSpecification(filter).map(s -> personRepository.findAll(s))
         .orElseGet(personRepository::findAllByEnabledTrue).stream()
@@ -41,11 +51,14 @@ public class PersonService {
   }
 
   private Function<PersonDTO, Person> personToEntity() {
-    return dto ->
-        personRepository
+    return dto -> {
+      if (dto.getId() != null)
+        return personRepository
             .findById(dto.getId())
             .map(merge(dto))
             .orElseGet(() -> personMapper.toEntity(dto));
+      return personMapper.toEntity(dto);
+    };
   }
 
   private UnaryOperator<Person> merge(PersonDTO dto) {

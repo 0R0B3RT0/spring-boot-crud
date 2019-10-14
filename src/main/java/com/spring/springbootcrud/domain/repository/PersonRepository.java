@@ -42,8 +42,8 @@ public interface PersonRepository
     if (filter.getAddress() != null) specifications.add(addressContains(filter.getAddress()));
 
     for (Specification<Person> personSpecification : specifications) {
-      specification =
-          specification.map(s -> s.and(personSpecification)).or(() -> of(personSpecification));
+      if (specification.isEmpty()) specification = of(personSpecification);
+      specification.ifPresent(s -> s.and(personSpecification));
     }
     return specification;
   }
