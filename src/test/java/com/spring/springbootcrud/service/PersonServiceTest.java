@@ -53,6 +53,14 @@ public class PersonServiceTest extends BaseUnitTest {
   }
 
   @Test
+  public void mustUpdatePersonWhenHasPersonDTOIsValid() {
+    final PersonDTO actualPersonDTO = personService.save(personDTO);
+
+    assertAllAttributesOfPersonDTO(actualPersonDTO);
+    verifyAllDependenciesOfPersonSave();
+  }
+
+  @Test
   public void mustRuntimeExceptionWhenPersonDTOIsNull() {
     expectedException.expect(RuntimeException.class);
     expectedException.expectMessage("Falha salvar a Pessoa");
@@ -91,7 +99,8 @@ public class PersonServiceTest extends BaseUnitTest {
 
   private void verifyAllDependenciesOfPersonSave() {
     verify(documentService, only()).cleanDocument(VALID_CPF);
-    verify(personRepository, only()).save(person);
+    verify(personRepository).save(person);
+    verify(personRepository).findById(ID);
     verify(personMapper).toEntity(personDTO);
     verify(personMapper).toDTO(person);
   }

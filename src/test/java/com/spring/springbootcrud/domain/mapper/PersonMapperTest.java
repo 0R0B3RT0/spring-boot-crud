@@ -26,4 +26,21 @@ public class PersonMapperTest extends BaseUnitTest {
 
     assertThat(actualPersonDTO, equalTo(expectedPersonDTO));
   }
+
+  @Test
+  public void mustNotMergeWhenHasEmptyDto() {
+    final Person actualPerson = personMapper.merge(PersonDTO.builder().build(), person);
+
+    assertAllAttributesOfPerson(actualPerson);
+  }
+
+  @Test
+  public void mustMergeWhenHasDtoIsValid() {
+    final Person actualPerson = personMapper.merge(expectedPersonDTO, Person.builder().build());
+
+    assertThat(actualPerson.getName(), equalTo(NAME));
+    assertThat(actualPerson.getCpf(), equalTo(VALID_CPF));
+    assertThat(actualPerson.getAddress(), equalTo(ADDRESS));
+    assertThat(actualPerson.getBornDate(), equalTo(bornDate));
+  }
 }
