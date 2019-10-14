@@ -39,6 +39,11 @@ public class PersonServiceTest extends BaseUnitTest {
   @Override
   public void setup() {
     super.setup();
+    personDTO = buildPersonDTO(INVALID_CPF, null);
+    mockAllServices();
+  }
+
+  private void mockAllServices() {
     when(personMapper.toEntity(personDTO)).thenReturn(person);
     when(personMapper.toDTO(person)).thenReturn(expectedPersonDTO);
     when(documentService.cleanDocument(any(String.class))).thenCallRealMethod();
@@ -57,11 +62,14 @@ public class PersonServiceTest extends BaseUnitTest {
   }
 
   @Test
-  public void mustUpdatePersonWhenHasPersonDTOIsValid() {
+  public void mustUpdatePersonWhenHasPersonDTOWithId() {
+    personDTO = buildPersonDTO(INVALID_CPF);
     when(personRepository.findById(ID)).thenReturn(of(person));
+    mockAllServices();
 
     final PersonDTO actualPersonDTO = personService.save(personDTO);
 
+    verify(personRepository).findById(ID);
     verify(personMapper).merge(personDTO, person);
     assertAllAttributesOfPersonDTO(actualPersonDTO);
     verifyAllDependenciesOfPersonSave();
@@ -117,7 +125,6 @@ public class PersonServiceTest extends BaseUnitTest {
   private void verifyAllDependenciesOfPersonSave() {
     verify(documentService, only()).cleanDocument(VALID_CPF);
     verify(personRepository).save(person);
-    verify(personRepository).findById(ID);
     verify(personMapper).toEntity(personDTO);
     verify(personMapper).toDTO(person);
   }

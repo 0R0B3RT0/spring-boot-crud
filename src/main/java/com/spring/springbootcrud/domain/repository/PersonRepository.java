@@ -4,17 +4,15 @@ import static com.google.common.collect.Lists.newArrayList;
 import static java.util.Optional.empty;
 import static java.util.Optional.of;
 
+import com.spring.springbootcrud.domain.dto.PersonDTO;
+import com.spring.springbootcrud.domain.entity.Person;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
-
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
-
-import com.spring.springbootcrud.domain.dto.PersonDTO;
-import com.spring.springbootcrud.domain.entity.Person;
 
 @Repository
 public interface PersonRepository
@@ -44,9 +42,8 @@ public interface PersonRepository
     if (filter.getAddress() != null) specifications.add(addressContains(filter.getAddress()));
 
     for (Specification<Person> personSpecification : specifications) {
-      if(specification.isEmpty())
-        specification = of(personSpecification);
-      specification.ifPresent( s -> s.and( personSpecification) );
+      if (specification.isEmpty()) specification = of(personSpecification);
+      specification.ifPresent(s -> s.and(personSpecification));
     }
     return specification;
   }

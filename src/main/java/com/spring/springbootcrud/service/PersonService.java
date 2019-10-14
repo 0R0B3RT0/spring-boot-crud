@@ -51,11 +51,14 @@ public class PersonService {
   }
 
   private Function<PersonDTO, Person> personToEntity() {
-    return dto ->
-        personRepository
+    return dto -> {
+      if (dto.getId() != null)
+        return personRepository
             .findById(dto.getId())
             .map(merge(dto))
             .orElseGet(() -> personMapper.toEntity(dto));
+      return personMapper.toEntity(dto);
+    };
   }
 
   private UnaryOperator<Person> merge(PersonDTO dto) {
