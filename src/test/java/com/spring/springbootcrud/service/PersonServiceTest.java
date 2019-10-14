@@ -1,5 +1,6 @@
 package com.spring.springbootcrud.service;
 
+import static java.util.Optional.of;
 import static org.assertj.core.util.Lists.newArrayList;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.never;
@@ -54,8 +55,11 @@ public class PersonServiceTest extends BaseUnitTest {
 
   @Test
   public void mustUpdatePersonWhenHasPersonDTOIsValid() {
+    when(personRepository.findById(ID)).thenReturn(of(person));
+
     final PersonDTO actualPersonDTO = personService.save(personDTO);
 
+    verify(personMapper).merge(personDTO, person);
     assertAllAttributesOfPersonDTO(actualPersonDTO);
     verifyAllDependenciesOfPersonSave();
   }
