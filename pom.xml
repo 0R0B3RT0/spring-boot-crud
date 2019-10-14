@@ -131,7 +131,7 @@
 									</limits>
 									<excludes>
 										<exclude>com.spring.springbootcrud.infrastructure.*</exclude>
-										<exclude>com.spring.springbootcrud.domain.repository.*git s</exclude>
+										<exclude>com.spring.springbootcrud.domain.repository.*</exclude>
 									</excludes>
 								</rule>
 							</rules>
