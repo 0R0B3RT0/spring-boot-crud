@@ -36,7 +36,7 @@ public interface PersonRepository
 
   static Optional<Specification<Person>> getSpecification(PersonDTO filter) {
     if (filter == null) return empty();
-    Specification<Person> specification = null;
+    Optional<Specification<Person>> specification = empty();
     List<Specification<Person>> specifications = newArrayList();
 
     if (filter.getCpf() != null) specifications.add(hasCpf(filter.getCpf()));
@@ -44,9 +44,10 @@ public interface PersonRepository
     if (filter.getAddress() != null) specifications.add(addressContains(filter.getAddress()));
 
     for (Specification<Person> personSpecification : specifications) {
-      if (specification == null) specification = personSpecification;
-      else specification = specification.and(personSpecification);
+      specification =
+          ofNullable(
+              specification.map(s -> s.and(personSpecification)).orElse(personSpecification));
     }
-    return ofNullable(specification);
+    return specification;
   }
 }
