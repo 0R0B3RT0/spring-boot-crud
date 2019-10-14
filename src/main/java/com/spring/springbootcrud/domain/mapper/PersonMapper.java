@@ -26,4 +26,13 @@ public class PersonMapper {
         .address(entity.getAddress())
         .build();
   }
+
+  public Person merge(PersonDTO dto, Person person) {
+    if (dto.getCpf() != null) person.setCpf(dto.getCpf());
+    if (dto.getName() != null) person.setName(dto.getName());
+    if (dto.getAddress() != null) person.setAddress(dto.getAddress());
+    if (dto.getBornDate() != null) person.setBornDate(dto.getBornDate());
+
+    return person;
+  }
 }

@@ -1,5 +1,6 @@
 package com.spring.springbootcrud.service;
 
+import static java.util.Optional.of;
 import static org.assertj.core.util.Lists.newArrayList;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.never;
@@ -53,6 +54,17 @@ public class PersonServiceTest extends BaseUnitTest {
   }
 
   @Test
+  public void mustUpdatePersonWhenHasPersonDTOIsValid() {
+    when(personRepository.findById(ID)).thenReturn(of(person));
+
+    final PersonDTO actualPersonDTO = personService.save(personDTO);
+
+    verify(personMapper).merge(personDTO, person);
+    assertAllAttributesOfPersonDTO(actualPersonDTO);
+    verifyAllDependenciesOfPersonSave();
+  }
+
+  @Test
   public void mustRuntimeExceptionWhenPersonDTOIsNull() {
     expectedException.expect(RuntimeException.class);
     expectedException.expectMessage("Falha salvar a Pessoa");
@@ -91,7 +103,8 @@ public class PersonServiceTest extends BaseUnitTest {
 
   private void verifyAllDependenciesOfPersonSave() {
     verify(documentService, only()).cleanDocument(VALID_CPF);
-    verify(personRepository, only()).save(person);
+    verify(personRepository).save(person);
+    verify(personRepository).findById(ID);
     verify(personMapper).toEntity(personDTO);
     verify(personMapper).toDTO(person);
   }

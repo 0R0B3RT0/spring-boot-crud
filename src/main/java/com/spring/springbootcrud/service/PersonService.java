@@ -41,7 +41,15 @@ public class PersonService {
   }
 
   private Function<PersonDTO, Person> personToEntity() {
-    return personMapper::toEntity;
+    return dto ->
+        personRepository
+            .findById(dto.getId())
+            .map(merge(dto))
+            .orElseGet(() -> personMapper.toEntity(dto));
+  }
+
+  private UnaryOperator<Person> merge(PersonDTO dto) {
+    return person -> personMapper.merge(dto, person);
   }
 
   private UnaryOperator<Person> persist() {
