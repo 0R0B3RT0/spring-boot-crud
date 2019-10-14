@@ -2,7 +2,7 @@ package com.spring.springbootcrud.domain.repository;
 
 import static com.google.common.collect.Lists.newArrayList;
 import static java.util.Optional.empty;
-import static java.util.Optional.of;
+import static java.util.Optional.ofNullable;
 
 import com.spring.springbootcrud.domain.dto.PersonDTO;
 import com.spring.springbootcrud.domain.entity.Person;
@@ -27,16 +27,16 @@ public interface PersonRepository
   }
 
   static Specification<Person> nameContains(String name) {
-    return (book, cq, cb) -> cb.equal(book.get("name"), "%" + name + "%");
+    return (book, cq, cb) -> cb.like(book.get("name"), "%" + name + "%");
   }
 
   static Specification<Person> addressContains(String address) {
-    return (book, cq, cb) -> cb.equal(book.get("address"), "%" + address + "%");
+    return (book, cq, cb) -> cb.like(book.get("address"), "%" + address + "%");
   }
 
   static Optional<Specification<Person>> getSpecification(PersonDTO filter) {
     if (filter == null) return empty();
-    Optional<Specification<Person>> specification = empty();
+    Specification<Person> specification = null;
     List<Specification<Person>> specifications = newArrayList();
 
     if (filter.getCpf() != null) specifications.add(hasCpf(filter.getCpf()));
@@ -44,9 +44,9 @@ public interface PersonRepository
     if (filter.getAddress() != null) specifications.add(addressContains(filter.getAddress()));
 
     for (Specification<Person> personSpecification : specifications) {
-      if (specification.isEmpty()) specification = of(personSpecification);
-      specification.ifPresent(s -> s.and(personSpecification));
+      if (specification == null) specification = personSpecification;
+      else specification = specification.and(personSpecification);
     }
-    return specification;
+    return ofNullable(specification);
   }
 }
