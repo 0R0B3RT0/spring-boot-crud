@@ -2,6 +2,8 @@ package com.spring.springbootcrud.service;
 
 import static java.util.Optional.of;
 import static org.assertj.core.util.Lists.newArrayList;
+import static org.hamcrest.Matchers.is;
+import static org.junit.Assert.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.only;
@@ -14,6 +16,7 @@ import com.spring.springbootcrud.domain.entity.Person;
 import com.spring.springbootcrud.domain.mapper.PersonMapper;
 import com.spring.springbootcrud.domain.repository.PersonRepository;
 import java.util.List;
+import java.util.Optional;
 import javax.persistence.PersistenceException;
 import org.junit.Rule;
 import org.junit.Test;
@@ -99,6 +102,16 @@ public class PersonServiceTest extends BaseUnitTest {
     verify(personRepository, never()).findAll(any());
     verify(personRepository).findAllByEnabledTrue();
     verify(personMapper, only()).toDTO(person);
+  }
+
+  @Test
+  public void mustPersonWhenHasPersonInDatabase() {
+    when(personRepository.findById(ID)).thenReturn(of(person));
+
+    final Optional<PersonDTO> optional = personService.findById(ID);
+
+    assertThat(optional.isPresent(), is(true));
+    assertAllAttributesOfPersonDTO(optional.get());
   }
 
   private void verifyAllDependenciesOfPersonSave() {

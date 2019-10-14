@@ -8,6 +8,8 @@ import com.spring.springbootcrud.domain.entity.Person;
 import com.spring.springbootcrud.domain.mapper.PersonMapper;
 import com.spring.springbootcrud.domain.repository.PersonRepository;
 import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
 import java.util.function.Function;
 import java.util.function.UnaryOperator;
 import java.util.stream.Collectors;
@@ -31,6 +33,14 @@ public class PersonService {
         .map(persist().andThen(logPersistSuccess()))
         .map(personMapper::toDTO)
         .orElseThrow(() -> new RuntimeException("Falha salvar a Pessoa"));
+  }
+
+  public Optional<PersonDTO> findById(UUID id) {
+    return ofNullable(id).map(findById()).orElseGet(Optional::empty);
+  }
+
+  private Function<UUID, Optional<PersonDTO>> findById() {
+    return id -> personRepository.findById(id).map(personMapper::toDTO);
   }
 
   public List<PersonDTO> findByFilter(PersonDTO filter) {
