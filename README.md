@@ -2,9 +2,9 @@
 Projeto de CRUD com Spring Boot
 
 ## Executar a aplicação
-### Crie o banco de dados
+### Iniciar o banco de dados
 ```bash
-createdb -U postgres spring-boot-crud
+sudo docker-compose up
 ```
 ### Compilar
 ```bash
@@ -23,6 +23,11 @@ mvn spring-boot:run
 * Postgres;
 * JUnit;
 
+## Dependências
+* [docker-compose](https://docs.docker.com/compose/install/#install-compose);
+* [Lombok](https://projectlombok.org/)
+
+
 ## Changelog
 - 0.0.1: Configuração da aplicação;
 - 0.0.2: Implementação do fluso salvar pessoa #13;
@@ -30,3 +35,4 @@ mvn spring-boot:run
 - 0.0.4: Criação de endpoint para salvar pessoa #14;
 - 0.0.5: Configuração do hystrix #15;
 - 0.0.6: Estrutura de validação #20;
+- 0.0.7: Configuração Docker #6;

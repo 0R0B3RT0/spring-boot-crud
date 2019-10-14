@@ -10,7 +10,7 @@
 	</parent>
 	<groupId>com.spring</groupId>
 	<artifactId>spring-boot-crud</artifactId>
-	<version>0.0.6</version>
+	<version>0.0.7</version>
 	<name>spring-boot-crud</name>
 	<description>Demo project for Spring Boot</description>
 
@@ -69,7 +69,8 @@
 		<dependency>
 			<groupId>com.h2database</groupId>
 			<artifactId>h2</artifactId>
-			<scope>test</scope>
+			<scope>t
+				est</scope>
 		</dependency>
 	</dependencies>
 
