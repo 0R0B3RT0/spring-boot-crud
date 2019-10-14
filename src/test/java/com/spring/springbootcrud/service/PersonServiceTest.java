@@ -3,6 +3,7 @@ package com.spring.springbootcrud.service;
 import static java.util.Optional.of;
 import static org.assertj.core.util.Lists.newArrayList;
 import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.notNullValue;
 import static org.junit.Assert.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.never;
@@ -22,6 +23,8 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
+import org.mockito.ArgumentCaptor;
+import org.mockito.Captor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
@@ -35,6 +38,7 @@ public class PersonServiceTest extends BaseUnitTest {
   @Mock private PersonRepository personRepository;
   @Mock private ValidationService<Person> validationService;
   @Rule public ExpectedException expectedException = ExpectedException.none();
+  @Captor public ArgumentCaptor<Person> argumentCaptor = ArgumentCaptor.forClass(Person.class);
 
   @Override
   public void setup() {
@@ -120,6 +124,28 @@ public class PersonServiceTest extends BaseUnitTest {
 
     assertThat(optional.isPresent(), is(true));
     assertAllAttributesOfPersonDTO(optional.get());
+  }
+
+  @Test
+  public void mustCancelPersonWherHasValidId() {
+    when(personRepository.findById(ID)).thenReturn(of(person));
+    when(personRepository.save(any(Person.class))).thenReturn(person);
+
+    final Optional<PersonDTO> actualPersonDTO = personService.cancel(ID);
+
+    verify(personRepository).save(argumentCaptor.capture());
+    final Person captorValue = argumentCaptor.getValue();
+    assertThat(captorValue.getDeletedAt(), notNullValue());
+    assertThat(captorValue.getEnabled(), is(false));
+    assertThat(actualPersonDTO.isPresent(), is(true));
+    assertAllAttributesOfPersonDTO(actualPersonDTO.get());
+  }
+
+  @Test
+  public void mustNotCancelPersonWherHasValidId() {
+    final Optional<PersonDTO> actualPersonDTO = personService.cancel(null);
+
+    assertThat(actualPersonDTO.isPresent(), is(false));
   }
 
   private void verifyAllDependenciesOfPersonSave() {

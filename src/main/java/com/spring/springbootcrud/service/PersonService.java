@@ -1,6 +1,8 @@
 package com.spring.springbootcrud.service;
 
 import static com.spring.springbootcrud.domain.repository.PersonRepository.getSpecification;
+import static java.time.LocalDateTime.now;
+import static java.util.Optional.empty;
 import static java.util.Optional.ofNullable;
 
 import com.spring.springbootcrud.domain.dto.PersonDTO;
@@ -36,10 +38,26 @@ public class PersonService {
   }
 
   public Optional<PersonDTO> findById(UUID id) {
-    return ofNullable(id).map(findById()).orElseGet(Optional::empty);
+    return ofNullable(id).map(findByIdAndMapperToDTO()).orElseGet(Optional::empty);
   }
 
-  private Function<UUID, Optional<PersonDTO>> findById() {
+  public Optional<PersonDTO> cancel(UUID id) {
+    if (id != null)
+      return personRepository
+          .findById(id)
+          .map(
+              person -> {
+                person.setDeletedAt(now());
+                person.setEnabled(false);
+                return person;
+              })
+          .map(personRepository::save)
+          .map(personMapper::toDTO);
+
+    return empty();
+  }
+
+  private Function<UUID, Optional<PersonDTO>> findByIdAndMapperToDTO() {
     return id -> personRepository.findById(id).map(personMapper::toDTO);
   }
 
