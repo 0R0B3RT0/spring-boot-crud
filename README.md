@@ -25,6 +25,7 @@ mvn spring-boot:run
 
 ## Dependências
 * [docker-compose](https://docs.docker.com/compose/install/#install-compose);
+* [Lombok](https://projectlombok.org/)
 
 
 ## Changelog
