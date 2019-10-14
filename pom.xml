@@ -10,7 +10,7 @@
 	</parent>
 	<groupId>com.spring</groupId>
 	<artifactId>spring-boot-crud</artifactId>
-	<version>0.0.9</version>
+	<version>0.0.10</version>
 	<name>spring-boot-crud</name>
 	<description>Demo project for Spring Boot</description>
 
