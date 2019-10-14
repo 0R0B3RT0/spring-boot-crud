@@ -2,9 +2,9 @@
 Projeto de CRUD com Spring Boot
 
 ## Executar a aplicação
-### Crie o banco de dados
+### Iniciar o banco de dados
 ```bash
-createdb -U postgres spring-boot-crud
+sudo docker-compose up
 ```
 ### Compilar
 ```bash
@@ -22,6 +22,11 @@ mvn spring-boot:run
 * Maven;
 * Postgres;
 * JUnit;
+
+## Dependências
+* [docker-compose](https://docs.docker.com/compose/install/#install-compose);
+* [Lombok](https://projectlombok.org/)
+
 
 ## Changelog
 - 0.0.1: Configuração da aplicação;
