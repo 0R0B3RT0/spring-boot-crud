@@ -41,7 +41,7 @@ public class PersonService {
     return ofNullable(id).map(findByIdAndMapperToDTO()).orElseGet(Optional::empty);
   }
 
-  public Optional<PersonDTO> cancel(UUID id) {
+  public Optional<PersonDTO> cancelById(UUID id) {
     if (id != null)
       return personRepository
           .findById(id)

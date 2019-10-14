@@ -131,7 +131,7 @@ public class PersonServiceTest extends BaseUnitTest {
     when(personRepository.findById(ID)).thenReturn(of(person));
     when(personRepository.save(any(Person.class))).thenReturn(person);
 
-    final Optional<PersonDTO> actualPersonDTO = personService.cancel(ID);
+    final Optional<PersonDTO> actualPersonDTO = personService.cancelById(ID);
 
     verify(personRepository).save(argumentCaptor.capture());
     final Person captorValue = argumentCaptor.getValue();
@@ -143,7 +143,7 @@ public class PersonServiceTest extends BaseUnitTest {
 
   @Test
   public void mustNotCancelPersonWherHasValidId() {
-    final Optional<PersonDTO> actualPersonDTO = personService.cancel(null);
+    final Optional<PersonDTO> actualPersonDTO = personService.cancelById(null);
 
     assertThat(actualPersonDTO.isPresent(), is(false));
   }

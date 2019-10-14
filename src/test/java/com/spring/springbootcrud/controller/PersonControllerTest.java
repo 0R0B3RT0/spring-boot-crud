@@ -108,4 +108,35 @@ public class PersonControllerTest extends BaseUnitTest {
     assertThat(annotation, notNullValue());
     assertThat(annotation.commandKey(), equalTo("find-by-id"));
   }
+
+  @Test
+  public void mustHttpStatusOKWhenDeleteById() {
+    when(personService.cancelById(ID)).thenReturn(of(expectedPersonDTO));
+
+    final ResponseEntity<PersonDTO> actualPersonDTO = personController.deleteById(ID);
+
+    verify(personService, only()).cancelById(ID);
+    assertThat(actualPersonDTO.getStatusCode(), equalTo(OK));
+    assertAllAttributesOfPersonDTO(actualPersonDTO.getBody());
+  }
+
+  @Test
+  public void mustHttpStatusNotFoundWhenDoesNotDeleteById() {
+    when(personService.cancelById(ID)).thenReturn(empty());
+
+    final ResponseEntity<PersonDTO> actualPersonDTO = personController.deleteById(ID);
+
+    verify(personService, only()).cancelById(ID);
+    assertThat(actualPersonDTO.getStatusCode(), equalTo(NOT_FOUND));
+  }
+
+  @Test
+  public void deleteByIdMustBeAnnotatedWithHystrixCommand() {
+    final Method method = getMethod(PersonController.class, "deleteById");
+
+    final HystrixCommand annotation = getAnnotation(method, HystrixCommand.class);
+
+    assertThat(annotation, notNullValue());
+    assertThat(annotation.commandKey(), equalTo("delete-by-id"));
+  }
 }
