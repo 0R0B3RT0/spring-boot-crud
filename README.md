@@ -45,3 +45,4 @@ mvn spring-boot:run
 - 0.0.8: Funcionalidade atualizar pessoa #31;
 - 0.0.9: Endpoint para busca de pessoa por id #30;
 - 0.0.10: Endpoint para exclusão lógica da entidade Person #33;
+- 0.0.11: Fix busca por filtro, mão funcionada corretamente o filtro por nome e endereço;
