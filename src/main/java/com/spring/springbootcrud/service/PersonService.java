@@ -5,20 +5,24 @@ import static java.time.LocalDateTime.now;
 import static java.util.Optional.empty;
 import static java.util.Optional.ofNullable;
 
-import com.spring.springbootcrud.domain.dto.PersonDTO;
-import com.spring.springbootcrud.domain.entity.Person;
-import com.spring.springbootcrud.domain.mapper.PersonMapper;
-import com.spring.springbootcrud.domain.repository.PersonRepository;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 import java.util.function.Function;
 import java.util.function.UnaryOperator;
 import java.util.stream.Collectors;
+
 import javax.persistence.PersistenceException;
+
 import lombok.extern.slf4j.Slf4j;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import com.spring.springbootcrud.domain.dto.PersonDTO;
+import com.spring.springbootcrud.domain.entity.Person;
+import com.spring.springbootcrud.domain.mapper.PersonMapper;
+import com.spring.springbootcrud.domain.repository.PersonRepository;
 
 @Slf4j
 @Service
@@ -44,7 +48,7 @@ public class PersonService {
   public Optional<PersonDTO> cancelById(UUID id) {
     if (id != null)
       return personRepository
-          .findById(id)
+          .findByIdAndEnabledTrue(id)
           .map(
               person -> {
                 person.setDeletedAt(now());

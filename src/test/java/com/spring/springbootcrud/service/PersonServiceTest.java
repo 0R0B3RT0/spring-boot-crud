@@ -11,14 +11,11 @@ import static org.mockito.Mockito.only;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-import com.spring.springbootcrud.BaseUnitTest;
-import com.spring.springbootcrud.domain.dto.PersonDTO;
-import com.spring.springbootcrud.domain.entity.Person;
-import com.spring.springbootcrud.domain.mapper.PersonMapper;
-import com.spring.springbootcrud.domain.repository.PersonRepository;
 import java.util.List;
 import java.util.Optional;
+
 import javax.persistence.PersistenceException;
+
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
@@ -28,6 +25,12 @@ import org.mockito.Captor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
+
+import com.spring.springbootcrud.BaseUnitTest;
+import com.spring.springbootcrud.domain.dto.PersonDTO;
+import com.spring.springbootcrud.domain.entity.Person;
+import com.spring.springbootcrud.domain.mapper.PersonMapper;
+import com.spring.springbootcrud.domain.repository.PersonRepository;
 
 @RunWith(MockitoJUnitRunner.class)
 public class PersonServiceTest extends BaseUnitTest {
@@ -128,7 +131,7 @@ public class PersonServiceTest extends BaseUnitTest {
 
   @Test
   public void mustCancelPersonWherHasValidId() {
-    when(personRepository.findById(ID)).thenReturn(of(person));
+    when(personRepository.findByIdAndEnabledTrue(ID)).thenReturn(of(person));
     when(personRepository.save(any(Person.class))).thenReturn(person);
 
     final Optional<PersonDTO> actualPersonDTO = personService.cancelById(ID);
