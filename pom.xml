@@ -131,10 +131,18 @@
 									</limits>
 									<excludes>
 										<exclude>com.spring.springbootcrud.infrastructure.*</exclude>
+										<exclude>com.spring.springbootcrud.domain.repository.*git s</exclude>
 									</excludes>
 								</rule>
 							</rules>
 						</configuration>
+					</execution>
+					<execution>
+						<id>report</id>
+						<phase>test</phase>
+						<goals>
+							<goal>report</goal>
+						</goals>
 					</execution>
 				</executions>
 				<configuration>

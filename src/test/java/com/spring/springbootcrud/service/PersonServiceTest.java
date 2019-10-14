@@ -1,6 +1,8 @@
 package com.spring.springbootcrud.service;
 
+import static org.assertj.core.util.Lists.newArrayList;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.only;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -10,6 +12,7 @@ import com.spring.springbootcrud.domain.dto.PersonDTO;
 import com.spring.springbootcrud.domain.entity.Person;
 import com.spring.springbootcrud.domain.mapper.PersonMapper;
 import com.spring.springbootcrud.domain.repository.PersonRepository;
+import java.util.List;
 import javax.persistence.PersistenceException;
 import org.junit.Rule;
 import org.junit.Test;
@@ -37,6 +40,8 @@ public class PersonServiceTest extends BaseUnitTest {
     when(documentService.cleanDocument(any(String.class))).thenCallRealMethod();
     when(personRepository.save(person)).thenReturn(person);
     when(validationService.validateAndThrow(person)).thenReturn(person);
+    when(personRepository.findAllByEnabledTrue()).thenReturn(newArrayList(person));
+    when(personRepository.findAll(any())).thenReturn(newArrayList(person));
   }
 
   @Test
@@ -62,6 +67,26 @@ public class PersonServiceTest extends BaseUnitTest {
     expectedException.expectMessage("Falha ao persistir a pessoa");
 
     personService.save(personDTO);
+  }
+
+  @Test
+  public void mustFindAllPeopleWhenFindWithFilter() {
+    final List<PersonDTO> activePeopleDTO = personService.findByFilter(expectedPersonDTO);
+
+    assertAllAttributesOfPersonDTO(activePeopleDTO.get(0));
+    verify(personRepository).findAll(any());
+    verify(personRepository, never()).findAllByEnabledTrue();
+    verify(personMapper, only()).toDTO(person);
+  }
+
+  @Test
+  public void mustFindAllPeopleWhenFindWithoutFilter() {
+    final List<PersonDTO> activePeopleDTO = personService.findByFilter(PersonDTO.builder().build());
+
+    assertAllAttributesOfPersonDTO(activePeopleDTO.get(0));
+    verify(personRepository, never()).findAll(any());
+    verify(personRepository).findAllByEnabledTrue();
+    verify(personMapper, only()).toDTO(person);
   }
 
   private void verifyAllDependenciesOfPersonSave() {
