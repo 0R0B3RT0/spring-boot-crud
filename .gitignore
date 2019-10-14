@@ -48,3 +48,4 @@ target/
 
 **/*.versionsBackup
 .attach_pid*
+coverage
