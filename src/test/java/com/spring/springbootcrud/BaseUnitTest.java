@@ -20,8 +20,8 @@ public abstract class BaseUnitTest {
 
   protected static final UUID ID = fromString("cabcc0d8-55bd-45a0-a409-1cb3ee292d3a");
   protected static final String NAME = "Usuário de Teste";
-  protected static final String INVALID_CPF = "123.456.789-10";
-  protected static final String VALID_CPF = "12345678910";
+  protected static final String INVALID_CPF = "185.086.141-28";
+  protected static final String VALID_CPF = "18508614128";
   protected static final String ADDRESS =
       "Rua teste, Bairro Java, num: 53 - Apto 103, Joinville - SC";
   protected LocalDate bornDate;

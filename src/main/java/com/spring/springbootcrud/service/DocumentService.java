@@ -1,5 +1,6 @@
 package com.spring.springbootcrud.service;
 
+import static com.google.common.base.Strings.isNullOrEmpty;
 import static java.lang.Character.getNumericValue;
 import static java.lang.String.valueOf;
 import static java.util.Optional.ofNullable;
@@ -22,6 +23,7 @@ public class DocumentService {
   }
 
   public boolean isValid(String cpf) {
+    if (isNullOrEmpty(cpf)) return false;
     final String safeCpf = cleanDocument(cpf);
 
     return getFirstVerificationDigit(safeCpf).equals(getFirstValidationDigit(safeCpf))
@@ -63,7 +65,6 @@ public class DocumentService {
   }
 
   private String calculateVerificationDigit(long cpfInitialDigitsResult) {
-    //    final long verificationDigit = cpfInitialDigitsResult * MULTIPLIER % DIVIDER;
     final long verificationDigit = DIVIDER - (cpfInitialDigitsResult % DIVIDER);
     return verificationDigit > 9 ? "0" : valueOf(verificationDigit);
   }

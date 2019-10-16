@@ -1,5 +1,6 @@
 package com.spring.springbootcrud.domain.entity;
 
+import com.spring.springbootcrud.domain.validation.IsValidCPF;
 import java.time.LocalDate;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -23,6 +24,7 @@ public class Person extends Model {
   @Column(nullable = false)
   private String name;
 
+  @IsValidCPF(message = "must be valid")
   @NotEmpty(message = "must not be null")
   @Column(nullable = false)
   private String cpf;
