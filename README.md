@@ -30,6 +30,7 @@ mvn spring-boot:run
 
 # Requisitos
 * [Java 11](https://www.oracle.com/technetwork/java/javase/downloads/jdk11-downloads-5066655.html);
+* [Docker](https://www.docker.com/);
 * [docker-compose](https://docs.docker.com/compose/install/#install-compose);
 * [Lombok](https://projectlombok.org/)
 
