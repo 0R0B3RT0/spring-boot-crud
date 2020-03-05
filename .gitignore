@@ -49,3 +49,5 @@ target/
 **/*.versionsBackup
 .attach_pid*
 coverage
+
+database
