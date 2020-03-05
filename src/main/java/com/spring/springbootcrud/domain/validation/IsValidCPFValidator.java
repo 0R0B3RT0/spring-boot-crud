@@ -1,9 +1,8 @@
 package com.spring.springbootcrud.domain.validation;
 
+import com.spring.springbootcrud.service.DocumentService;
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
-
-import com.spring.springbootcrud.service.DocumentService;
 
 public class IsValidCPFValidator implements ConstraintValidator<IsValidCPF, String> {
 

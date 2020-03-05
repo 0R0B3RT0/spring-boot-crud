@@ -1,13 +1,12 @@
 package com.spring.springbootcrud.service;
 
+import com.spring.springbootcrud.BaseUnitTest;
+import com.spring.springbootcrud.domain.entity.Person;
+import com.spring.springbootcrud.domain.exception.ValidationException;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 import org.mockito.InjectMocks;
-
-import com.spring.springbootcrud.BaseUnitTest;
-import com.spring.springbootcrud.domain.entity.Person;
-import com.spring.springbootcrud.domain.exception.ValidationException;
 
 public class ValidationServiceTest extends BaseUnitTest {
 
