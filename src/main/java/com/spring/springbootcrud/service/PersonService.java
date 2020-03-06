@@ -31,22 +31,20 @@ public class PersonService {
 
   public PersonDTO save(PersonDTO personDTO) {
     return ofNullable(personDTO)
+        .map(this::saveAndReturnEntity)
+        .map(personMapper::toDTO)
+        .orElseThrow(() -> new RuntimeException("Falha salvar a Pessoa"));
+  }
+
+  public Person saveAndReturnEntity(PersonDTO personDTO) {
+    return ofNullable(personDTO)
         .map(personToEntity().andThen(validationService::validateAndThrow).andThen(cleanCpf()))
         .map(persist().andThen(logPersistSuccess()))
-        .map(personMapper::toDTO)
         .orElseThrow(() -> new RuntimeException("Falha salvar a Pessoa"));
   }
 
   public Optional<PersonDTO> findById(UUID id) {
     return ofNullable(id).map(findByIdAndMapperToDTO()).orElseGet(Optional::empty);
-  }
-
-  public Optional<PersonDTO> findByCpf(String cpf) {
-    return personRepository
-        .findByCpfAndEnabledTrue(cpf)
-        .map(personMapper::toDTO)
-        .map(Optional::of)
-        .orElseGet(Optional::empty);
   }
 
   public Optional<PersonDTO> cancelById(UUID id) {

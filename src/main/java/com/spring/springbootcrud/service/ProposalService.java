@@ -1,5 +1,7 @@
 package com.spring.springbootcrud.service;
 
+import static java.util.Optional.ofNullable;
+
 import java.util.Optional;
 import java.util.UUID;
 
@@ -10,6 +12,7 @@ import org.springframework.stereotype.Service;
 
 import com.spring.springbootcrud.controller.dto.RequestProposalDTO;
 import com.spring.springbootcrud.domain.dto.PersonDTO;
+import com.spring.springbootcrud.domain.entity.Person;
 import com.spring.springbootcrud.domain.entity.Proposal;
 import com.spring.springbootcrud.domain.repository.PersonRepository;
 import com.spring.springbootcrud.domain.repository.ProposalRepository;
@@ -23,20 +26,39 @@ public class ProposalService {
   @Autowired private PersonService personService;
 
   public UUID save(RequestProposalDTO requestProposalDTO) {
-    PersonDTO personDTO =
-        personService
-            .findByCpf(requestProposalDTO.getCpf())
-            .orElseGet(() -> personService.save(buildNewPerson(requestProposalDTO)));
+    return ofNullable(requestProposalDTO)
+        .map(this::findOrCreateNewPerson)
+        .map(person -> buildNewProposal(requestProposalDTO, person))
+        .map(proposalRepository::save)
+        .map(Proposal::getId)
+        .orElseThrow(() -> new RuntimeException("Falha salvar a Proposta"));
+  }
 
-    Proposal proposal =
-        Proposal.builder()
-            .person(personRepository.findById(personDTO.getId()).get())
-            .amountOfLoan(requestProposalDTO.getAmountOfLoan())
-            .income(requestProposalDTO.getIncome())
-            .termsInstallment(requestProposalDTO.getTermsInstallment())
-            .build();
+  public Optional<UUID> findById(UUID id) {
+    return ofNullable(id)
+        .flatMap(proposalRepository::findByIdAndEnabledTrue)
+        .map(Proposal::getId)
+        .map(Optional::of)
+        .orElseThrow(() -> new RuntimeException("Falha ao consulta a Proposta"));
+  }
 
-    return proposalRepository.save(proposal).getId();
+  public Optional<UUID> cancelById(UUID id) {
+    return Optional.empty();
+  }
+
+  private Person findOrCreateNewPerson(RequestProposalDTO requestProposalDTO) {
+    return personRepository
+        .findByCpfAndEnabledTrue(requestProposalDTO.getCpf())
+        .orElseGet(() -> personService.saveAndReturnEntity(buildNewPerson(requestProposalDTO)));
+  }
+
+  private Proposal buildNewProposal(RequestProposalDTO requestProposalDTO, Person person) {
+    return Proposal.builder()
+        .person(person)
+        .amountOfLoan(requestProposalDTO.getAmountOfLoan())
+        .income(requestProposalDTO.getIncome())
+        .termsInstallment(requestProposalDTO.getTermsInstallment())
+        .build();
   }
 
   private PersonDTO buildNewPerson(RequestProposalDTO requestProposalDTO) {
@@ -45,13 +67,5 @@ public class ProposalService {
         .name(requestProposalDTO.getName())
         .bornDate(requestProposalDTO.getBornDate())
         .build();
-  }
-
-  public Optional<UUID> findById(UUID id) {
-    return Optional.empty();
-  }
-
-  public Optional<UUID> cancelById(UUID id) {
-    return Optional.empty();
   }
 }

@@ -1,6 +1,5 @@
 package com.spring.springbootcrud.domain.repository;
 
-import com.spring.springbootcrud.domain.entity.Person;
 import com.spring.springbootcrud.domain.entity.Proposal;
 import java.util.List;
 import java.util.Optional;
@@ -11,7 +10,7 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface ProposalRepository extends CrudRepository<Proposal, UUID> {
 
-  List<Person> findAllByEnabledTrue();
+  List<Proposal> findAllByEnabledTrue();
 
-  Optional<Person> findByIdAndEnabledTrue(UUID id);
+  Optional<Proposal> findByIdAndEnabledTrue(UUID id);
 }
