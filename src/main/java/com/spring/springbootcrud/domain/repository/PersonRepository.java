@@ -22,6 +22,8 @@ public interface PersonRepository
 
   Optional<Person> findByIdAndEnabledTrue(UUID id);
 
+  Optional<Person> findByCpfAndEnabledTrue(String cpf);
+
   static Specification<Person> hasCpf(String cpf) {
     return (book, cq, cb) -> cb.equal(book.get("cpf"), cpf);
   }

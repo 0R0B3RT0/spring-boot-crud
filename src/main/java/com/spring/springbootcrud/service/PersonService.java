@@ -41,6 +41,14 @@ public class PersonService {
     return ofNullable(id).map(findByIdAndMapperToDTO()).orElseGet(Optional::empty);
   }
 
+  public Optional<PersonDTO> findByCpf(String cpf) {
+    return personRepository
+        .findByCpfAndEnabledTrue(cpf)
+        .map(personMapper::toDTO)
+        .map(Optional::of)
+        .orElseGet(Optional::empty);
+  }
+
   public Optional<PersonDTO> cancelById(UUID id) {
     if (id != null)
       return personRepository
