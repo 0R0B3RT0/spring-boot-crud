@@ -33,7 +33,5 @@ public class Person extends Model {
   @Column(name = "born_date")
   private LocalDate bornDate;
 
-  @NotEmpty(message = "must not be null")
-  @Column
-  private String address;
+  @Column private String address;
 }

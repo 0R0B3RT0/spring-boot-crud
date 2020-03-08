@@ -1,10 +1,13 @@
 CREATE TABLE proposal
 (
   id                UUID PRIMARY KEY NOT NULL,
-  person_id         TEXT  NOT NULL,
+  person_id         UUID  NOT NULL,
   amount_of_loan    NUMERIC(19, 6) NOT NULL,
-  terms_installment NUMERIC(3, 0) NOT NULL,
+  terms_installment TEXT NOT NULL,
   income            NUMERIC(19, 6) NOT NULL,
+  refused_policy    TEXT,
+  status            TEXT,
+  result            TEXT,
   created_at        TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT now(),
   updated_at        TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT now(),
   deleted_at        TIMESTAMP WITH TIME ZONE,

@@ -2,70 +2,80 @@ package com.spring.springbootcrud.service;
 
 import static java.util.Optional.ofNullable;
 
-import java.util.Optional;
-import java.util.UUID;
-
-import lombok.extern.slf4j.Slf4j;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
 import com.spring.springbootcrud.controller.dto.RequestProposalDTO;
+import com.spring.springbootcrud.controller.dto.ResponseProposalDTO;
 import com.spring.springbootcrud.domain.dto.PersonDTO;
 import com.spring.springbootcrud.domain.entity.Person;
 import com.spring.springbootcrud.domain.entity.Proposal;
-import com.spring.springbootcrud.domain.repository.PersonRepository;
+import com.spring.springbootcrud.domain.mapper.ProposalMapper;
 import com.spring.springbootcrud.domain.repository.ProposalRepository;
+import java.util.Optional;
+import java.util.UUID;
+import java.util.function.UnaryOperator;
+import javax.persistence.PersistenceException;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 @Slf4j
 @Service
 public class ProposalService {
 
   @Autowired private ProposalRepository proposalRepository;
-  @Autowired private PersonRepository personRepository;
+  @Autowired private ProposalMapper proposalMapper;
   @Autowired private PersonService personService;
+  @Autowired private ValidationService<Proposal> validationService;
 
-  public UUID save(RequestProposalDTO requestProposalDTO) {
+  public ResponseProposalDTO save(RequestProposalDTO requestProposalDTO) {
     return ofNullable(requestProposalDTO)
         .map(this::findOrCreateNewPerson)
-        .map(person -> buildNewProposal(requestProposalDTO, person))
-        .map(proposalRepository::save)
-        .map(Proposal::getId)
+        .map(person -> proposalMapper.toEntity(requestProposalDTO, person))
+        .map(validationService::validateAndThrow)
+        .map(persist().andThen(logPersistSuccess()))
+        .map(proposalMapper::toResponseProposalDTO)
         .orElseThrow(() -> new RuntimeException("Falha salvar a Proposta"));
   }
 
-  public Optional<UUID> findById(UUID id) {
+  public Optional<ResponseProposalDTO> findById(UUID id) {
     return ofNullable(id)
         .flatMap(proposalRepository::findByIdAndEnabledTrue)
-        .map(Proposal::getId)
+        .map(proposalMapper::toResponseProposalDTO)
         .map(Optional::of)
         .orElseThrow(() -> new RuntimeException("Falha ao consulta a Proposta"));
   }
 
-  public Optional<UUID> cancelById(UUID id) {
-    return Optional.empty();
+  private UnaryOperator<Proposal> persist() {
+    return proposal -> {
+      try {
+        return proposalRepository.save(proposal);
+      } catch (Exception ex) {
+        log.error("Falha ao persistir a proposta", ex);
+        throw new PersistenceException("Falha ao persistir a proposta", ex);
+      }
+    };
+  }
+
+  private UnaryOperator<Proposal> logPersistSuccess() {
+    return proposal -> {
+      log.info(
+          "Proposta persistida com sucesso, id:{}, cliente:{}",
+          proposal.getId(),
+          proposal.getPerson().getName());
+      return proposal;
+    };
   }
 
   private Person findOrCreateNewPerson(RequestProposalDTO requestProposalDTO) {
-    return personRepository
+    return personService
         .findByCpfAndEnabledTrue(requestProposalDTO.getCpf())
         .orElseGet(() -> personService.saveAndReturnEntity(buildNewPerson(requestProposalDTO)));
-  }
-
-  private Proposal buildNewProposal(RequestProposalDTO requestProposalDTO, Person person) {
-    return Proposal.builder()
-        .person(person)
-        .amountOfLoan(requestProposalDTO.getAmountOfLoan())
-        .income(requestProposalDTO.getIncome())
-        .termsInstallment(requestProposalDTO.getTermsInstallment())
-        .build();
   }
 
   private PersonDTO buildNewPerson(RequestProposalDTO requestProposalDTO) {
     return PersonDTO.builder()
         .cpf(requestProposalDTO.getCpf())
         .name(requestProposalDTO.getName())
-        .bornDate(requestProposalDTO.getBornDate())
+        .bornDate(requestProposalDTO.getBirthDate())
         .build();
   }
 }
