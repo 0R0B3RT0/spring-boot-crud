@@ -4,8 +4,12 @@ import static java.util.UUID.fromString;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
 
+import com.spring.springbootcrud.controller.dto.RequestProposalDTO;
+import com.spring.springbootcrud.controller.dto.ResponseProposalDTO;
 import com.spring.springbootcrud.domain.dto.PersonDTO;
 import com.spring.springbootcrud.domain.entity.Person;
+import com.spring.springbootcrud.domain.entity.Proposal;
+import com.spring.springbootcrud.domain.enumeration.ProcessStatus;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
 import java.math.BigDecimal;
@@ -20,6 +24,7 @@ import org.mockito.junit.MockitoJUnitRunner;
 public abstract class BaseUnitTest {
 
   protected static final UUID ID = fromString("cabcc0d8-55bd-45a0-a409-1cb3ee292d3a");
+  protected static final UUID PROPOSAL_ID = fromString("BA5DABF2-CC14-4883-8EE0-B991C10CE114");
   protected static final String NAME = "Usuário de Teste";
   protected static final String INVALID_CPF = "185.086.141-28";
   protected static final String VALID_CPF = "18508614128";
@@ -30,14 +35,20 @@ public abstract class BaseUnitTest {
   protected LocalDate bornDate;
   protected PersonDTO personDTO;
   protected PersonDTO expectedPersonDTO;
+  protected RequestProposalDTO requestProposalDTO;
+  protected ResponseProposalDTO responseProposalDTO;
   protected Person person;
+  protected Proposal proposal;
 
   @Before
   public void setup() {
     bornDate = LocalDate.of(1989, 11, 1);
     personDTO = buildPersonDTO(INVALID_CPF);
+    requestProposalDTO = buildRequestProposalDTO();
+    responseProposalDTO = buildResponseProposalDTO();
     expectedPersonDTO = buildPersonDTO(VALID_CPF);
     person = buildPerson();
+    proposal = buildProposal();
   }
 
   protected void assertAllAttributesOfPersonDTO(PersonDTO actualPersonDTO) {
@@ -91,5 +102,40 @@ public abstract class BaseUnitTest {
         .filter(m -> m.getName().equals(methodName))
         .findFirst()
         .orElseThrow(RuntimeException::new);
+  }
+
+  private RequestProposalDTO buildRequestProposalDTO() {
+    return RequestProposalDTO.builder()
+        .name(NAME)
+        .cpf(VALID_CPF)
+        .birthDate(bornDate)
+        .amount(TWO_HUNDRED)
+        .income(ONE_HUNDRED)
+        .terms("12")
+        .build();
+  }
+
+  private Proposal buildProposal() {
+    return Proposal.builder()
+        .id(PROPOSAL_ID)
+        .person(person)
+        .amountOfLoan(TWO_HUNDRED)
+        .termsInstallment("12")
+        .income(ONE_HUNDRED)
+        .refusedPolicy(null)
+        .status(ProcessStatus.PROCESSING)
+        .result(null)
+        .build();
+  }
+
+  private ResponseProposalDTO buildResponseProposalDTO() {
+    return ResponseProposalDTO.builder()
+        .id(PROPOSAL_ID)
+        .amount(TWO_HUNDRED)
+        .terms("12")
+        .status(ProcessStatus.PROCESSING)
+        .result(null)
+        .refusedPolicy(null)
+        .build();
   }
 }
