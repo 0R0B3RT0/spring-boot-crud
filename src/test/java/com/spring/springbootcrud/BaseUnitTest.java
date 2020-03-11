@@ -8,6 +8,7 @@ import com.spring.springbootcrud.domain.dto.PersonDTO;
 import com.spring.springbootcrud.domain.entity.Person;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.UUID;
@@ -24,6 +25,8 @@ public abstract class BaseUnitTest {
   protected static final String VALID_CPF = "18508614128";
   protected static final String ADDRESS =
       "Rua teste, Bairro Java, num: 53 - Apto 103, Joinville - SC";
+  protected static final BigDecimal ONE_HUNDRED = BigDecimal.valueOf(1000);
+  protected static final BigDecimal TWO_HUNDRED = BigDecimal.valueOf(2000);
   protected LocalDate bornDate;
   protected PersonDTO personDTO;
   protected PersonDTO expectedPersonDTO;
